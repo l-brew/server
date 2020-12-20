@@ -1,0 +1,339 @@
+{% load static %}
+<!DOCTYPE html>
+<!--
+    Story by HTML5 UP    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)-->
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Temperaturregelung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <link rel="stylesheet" href='{% static "main/assets/css/main.css" %}'>
+  <link rel="stylesheet" href='{% static "main/assets/css/main.css" %}'>
+  <link rel="stylesheet" href='{% static "main/assets/dist/simplepicker.css" %}'>
+  <noscript><link rel="stylesheet" href='{% static "main/assets/css/noscript.css" %}'></noscript>
+  <script type="text/javascript" src='{% static "main/node_modules/jquery/dist/jquery.min.js" %}'></script>
+  <script type="text/javascript" src='{% static "main/node_modules/moment/min/moment.min.js" %}'></script
+  <script type="text/javascript" src='{% static "main/node_modules/bootstrap/dist/js/bootstrap.min.js" %}'></script>
+  <script type="text/javascript" src='{% static "main/node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js" %}'></script>
+  <script src='{% static "main/assets/js/echarts.min.js" %}'></script>
+  <link rel="stylesheet" href='{% static "main/node_modules/bootstrap/dist/css/bootstrap.min.css" %}'>
+  <link rel="stylesheet" href='{% static "main/node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" %}'>
+  <style>
+.iconDiv{
+    float:left;
+    width:4em;
+    height:4em;
+    padding:0.5em;
+}
+.rwIconDiv{
+    float:left;
+    width:10em;
+    height:10em;
+    padding:0.5em;
+}
+
+
+.iconImg{
+    max-width:100%;
+    max-height:100%;
+}
+
+.buttonContainer{
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+    width:100%;
+    padding-top:0.5em;
+}
+
+.buttonClass1{
+    min-width:40%;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+}
+.buttonClass2{
+    font-size:80%;
+    margin-bottom:0.5em;
+    min-width:5em;
+}
+        </style>
+</head>
+<body class="is-prreload">
+<!-- Wrapper -->
+<div id="wrapper" class="divided">
+  <!-- One -->
+  <section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
+    <div class="content">
+      <form style="text-align:center" action="javascript:loginPW();"> <input style="width:15em;display:inline"
+                                                                             id="pass" name="pass" type="password"> <input id="pw_submit" value="Login"
+                                                                                                                           type="submit"> </form>
+      <!-- <h1 style="text&#45;align:center"> Temperaturregelung </h1> -->
+      <div style="display:flex;justify-content:space-around;width:100%">
+        <div class="iconDiv"><img class="iconImg" id="img_online" src='{% static "main/images/offline.png" %}'>
+        </div>
+        <div class="iconDiv"> <img class="iconImg" id="img_heater" src='{% static "main/images/heater_off.png" %}'>
+        </div>
+        <div class="iconDiv"> <img class="iconImg" id="img_cooler" src='{% static "main/images/cooler_off.svg" %}'>
+        </div>
+      </div>
+      <br>
+      <div style="text-align:center">
+        <div style="display:inline-block;padding:5px;background-color:#fff">
+          <img style="" src='{% static "main/images/thermometer.svg" %}'>
+          <div id="divTemp" style="font-size:200%;vertical-align:middle;display:inline"> ?°C </div>
+        </div>
+
+        <br>
+        <div style="display:inline-block;padding:5px;background-color:#fff">
+          <div id="divGrav" style="font-size:200%;vertical-align:middle;display:inline"> ?°P </div>
+        </div>
+         <br>
+         <div style="display:inline-block;padding:5px;background-color:#fff">
+          <div id="divABV" style="font-size:200%;vertical-align:middle;display:inline"> ?°P </div>
+        </div>
+         <br>
+        <div style="display:inline-block;padding:5px;background-color:#fff">
+          <div id="divntc1" style="font-size:200%;vertical-align:middle;display:inline"> ?°P </div>
+        </div>
+        <br>
+        <div style="display:inline-block;padding:5px;background-color:#fff">
+          <div id="divntc2" style="font-size:200%;vertical-align:middle;display:inline"> ?°P </div>
+        </div>
+
+        <div  id="temp_profile_running"  style="display:inline-block;padding:5px;background-color:#fff" >
+          <h2  >Temperaturprofil Läuft</h2>
+          <br>
+          <div id="temp_profile_step"></div>
+          <div id="temp_profile_next"></div>
+          <div class="buttonContainer">
+            <button class="auth buttonClass1" id="button_profile_next"
+                    onclick='profile_button({"profile":"next"})'>
+              Next
+            </button>
+            <button class="auth buttonClass1" id="button_profile_prev"
+                    onclick='profile_button({"profile":"next"})'>
+              Prev.
+            </button>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="buttonContainer">
+        <button class="auth buttonClass1" id="button_reg"
+                onclick=ctlButton({'reg':'on'})>
+          Auto
+        </button>
+        <button class="auth buttonClass1"
+                id="button_off" onclick="ctlButton({'reg':'off'})">
+          Aus
+        </button>
+        <button
+                class="auth buttonClass1" id="button_heater" onclick="ctlButton({'heater':'tgl'})">
+          Heizen
+        </button>
+        <button class="auth buttonClass1" id="button_cooler" onclick="ctlButton({'cooler':'tgl'})">
+          Kühlen
+        </button>
+      </div>
+      <br>
+      <div class="buttonContainer"> <button class="auth buttonClass1" id="button_reset"
+                                            onclick="ctlReset()">Reset</button> <button class="auth buttonClass1"
+                                                                                        id="button_setI" onclick="ctlSetI()">setI</button> <button class="auth buttonClass1"
+                                                                                                                                                   id="button_period" onclick="period()">set period</button> <button
+              class="auth buttonClass1" id="button_freeze" onclick="freeze(true)">CP</button>
+      </div>
+      <!--  -->
+      <!--                     <div class="container"> -->
+      <!--                     <div class="row"> -->
+      <!--                         <div class='col&#45;sm&#45;6'> -->
+      <!--                             <div class="form&#45;group"> -->
+      <!--                                 <div class='input&#45;group date' id='datetimepicker1'> -->
+      <!--                                     <input type='text' class="form&#45;brew" /> -->
+      <!--                                     <span class="input&#45;group&#45;addon"> -->
+      <!--                                         <span class="glyphicon glyphicon&#45;calendar"></span> -->
+      <!--                                     </span> -->
+      <!--                                 </div> -->
+      <!--                             </div> -->
+      <!--                         </div> -->
+      <!--                         <script type="text/javascript"> -->
+      <!-- $(function () { -->
+      <!--     $('#datetimepicker1').datetimepicker({ -->
+      <!--         locale: 'de', -->
+      <!--     defaultDate: new Date(Date.now()) -->
+      <!--     }); -->
+      <!-- }); -->
+      <!--                         </script> -->
+      <!--                     </div> -->
+      <!--                 </div> --> <br>
+      <div class="buttonContainer">
+        <button style="font-size:70%"  id="button_debug"
+                 onclick="openDebugView()">
+          Toggle Debug View
+        </button>
+
+      </div>
+              <br>
+      <div id="debugTable" hidden=true>
+      <table class="fmt_Table">
+        <tbody>
+        <tr>
+          <td>Zeit</td>
+          <td id="tab_zeit"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>Temp.</td>
+          <td id="tab_temp"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>Soll</td>
+          <td id="tab_soll"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>Target</td>
+          <td id="tab_target"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>k_p</td>
+          <td id="tab_kp"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>k_i</td>
+          <td id="tab_ki"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>stell</td>
+          <td id="tab_stell"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>err</td>
+          <td id="tab_err"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>i_err</td>
+          <td id="tab_i_err"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>power</td>
+          <td id="tab_power"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>ramp</td>
+          <td id="tab_ramp"><br>
+          </td>
+        </tr>
+        <tr>
+          <td>Tilt Temp.</td>
+          <td id="tab_ttemp"><br>
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+        </div>
+      <form class="auth" id="changeForm" action="javascript:changeParameters();">
+        Soll: <input class="auth" id="input_soll" name="soll" value="" type="text">
+        <br>
+        k_p: <input class="auth" id="input_kp" name="k_p" value="" type="text">
+        <br>
+        k_i: <input class="auth" id="input_ki" name="k_i" value="" type="text">
+        <br>
+        ramp: <input class="auth" id="input_ramp" name="ramp" value="" type="text">
+        <br>
+        <button class="auth" id="button_change" onclick="changeParameters()">Übernehmen</button>
+        <button class="auth" id="button_rampUp" onclick="rampUp()">Ramp Up</button>
+      </form>
+      <br>
+      <h2> Rührwerk</h2>
+      <div style="display:flex;justify-content:space-around;width:100%">
+        <div class="rwIconDiv"><img style="width:100%;height:80%" class="iconImg"
+                                    id="img_rw" src='{% static "main/images/prop_grey.svg" %}'></div>
+      </div>
+      <div class="buttonContainer"> <input id="input_rw" name="rw" value="0"
+                                           type="text"> <button class="auth buttonClass1" id="button_rwOn" onclick="rw(true)">Set</button>
+        <button class="auth buttonClass1" id="button_rwSpeed" onclick="rw(false)">Off</button>
+      </div>
+    </div>
+    <div class="image" style="float:left;height:auto;background-color:#fff">
+      <div id="chart" style="width:100%;height:450px;"></div>
+      <br>
+      <table class="fmt_Table">
+        <tbody>
+        <tr style="background-color:#fff">
+          <td > Zeitraum </td>
+          <td colspan="2">
+            <select id="timeRange" onchange="selectTimeRange()">
+              <option value="0">Alles</option>
+              <option value="600">10 Minuten</option>
+              <option value="3600">1 Stunde</option>
+              <option value="10800">3 Stunden</option>
+              <option value="86400">1 Tag</option>
+              <option value="259200">3 Tage</option>
+              <option value="604800">1 Woche</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td> Logfile </td>
+          <td >
+
+            <select id="file" onchange="selectFile()" onfocus='load_logfile_dropdown()'>
+              <option value="Aktuell">Aktuell</option>
+            </select>
+          </td>
+          <td>
+            <button style="font-size:70%" class="auth" id="button_newFile" onclick="newFile()">new
+              File</button>
+
+          </td>
+        </tr>
+        <tr style="background-color:#fff">
+          <td> Temperaturprofil </td>
+          <td >
+
+            <select id="temp_profile"  class="auth" onfocus='load_temp_profile_dropdown()'>
+              <option value="None">None</option>
+            </select>
+          </td>
+          <td>
+            <button style="font-size:70%" class="auth" id="button_temp_profile" onclick="load_temp_profile()">load</button>
+
+          </td>
+        </tr>
+        <tr id="temp_pofile_start_row" style="background-color:#fff"  hidden=true>
+          <td id="temp_pofile_file">  </td>
+          <td>
+            <button style="font-size:70%" class="auth" id="button_temp_profile_start" onclick="start_temp_profile()">start</button>
+
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Footer -->
+      <footer class="wrapper style1 align-center">
+        <div class="inner"> </div>
+      </footer>
+    </div>
+    <!-- Scripts -->
+    <script src='{% static "main/assets/dist/simplepicker.js" %}'></script>
+    <script src='{% static "main/assets/js/jquery.scrollex.min.js" %}'></script>
+    <script src='{% static "main/assets/js/jquery.scrolly.min.js" %}'></script>
+    <script src='{% static "main/assets/js/browser.min.js" %}'></script>
+    <script src='{% static "main/assets/js/breakpoints.min.js" %}'></script>
+    <script src='{% static "main/assets/js/util.js" %}'></script>
+    <script src='{% static "main/assets/js/main.js" %}'></script>
+    <script src='{% static "main/assets/js/reg.js" %}'></script> </section>
+</div>
+</body>
+</html>
