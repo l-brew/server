@@ -30,7 +30,7 @@ def full_status(request):
     if 'authorized' in request.session:
         auth = request.session['authorized']
     last_update = stat_o.server_time
-    if (timezone.now() - last_update).seconds > 10 :
+    if (timezone.now() - last_update).seconds > 10:
         stat.update({'online': False})
     else:
         stat.update({'online':True})
