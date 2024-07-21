@@ -3,7 +3,6 @@ from status.models import Status
 import pytz
 
 
-
 class Data_logger(models.Model):
     filename = models.CharField(max_length=51)
     time = models.DateTimeField()
