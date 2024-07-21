@@ -3,12 +3,13 @@ from status.models import Status
 import pytz
 
 
+
 class Data_logger(models.Model):
     filename = models.CharField(max_length=51)
     time = models.DateTimeField()
     actuating_value = models.FloatField()
     tilt_grav = models.FloatField(null=True)
-    tilt_temp = models.FloatField(null=True)
+    tilt_temp = models.FloatField(null=True,blank=True)
     set_point = models.FloatField()
     temp = models.FloatField()
 
