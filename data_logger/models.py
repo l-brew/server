@@ -8,6 +8,7 @@ class Data_logger(models.Model):
     time = models.DateTimeField()
     actuating_value = models.FloatField()
     tilt_grav = models.FloatField(null=True)
+    tilt_temp = models.FloatField(null=True)
     set_point = models.FloatField()
     temp = models.FloatField()
 
@@ -33,6 +34,7 @@ class Data_logger(models.Model):
             dl.time = stat.time
             dl.set_point = stat.set_point
             dl.tilt_grav = stat.tilt_grav
+            dl.tilt_temp = stat.tilt_temp
             dl.actuating_value = stat.actuating_value
             dl.filename=dlm.filename
             dl.save()
@@ -58,6 +60,7 @@ class Data_logger_compression(models.Model):
     set_point=models.FloatField(default=0.1)
     actuating_value=models.FloatField(default=1)
     tilt_grav=models.FloatField(default=0.1)
+    tilt_temp=models.FloatField(default=0.1)
 
 class Logfiles(models.Model):
     filename = models.CharField(max_length=50,primary_key=True)

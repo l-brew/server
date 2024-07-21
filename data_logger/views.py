@@ -17,6 +17,7 @@ def data_http_response(logs,timestamp):
             row.append(e.set_point)
             row.append(e.temp)
             row.append(e.tilt_grav)
+            row.append(e.tilt_temp)
             data.append(row)
         body={'data':data,'time':data[-1][0]}
     else:
